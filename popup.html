@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Pixel Picker</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Pixel Picker</h1>
+    <button id="pickColor" class="ext-primary-button">🎯 Pick a Color</button>
+    <hr>
+    <div id="colorInfo" class="hidden">
+      <div id="colorDisplay"></div>
+      <div id="colorCodes">
+        <div><strong>HEX:</strong> <span id="hex"></span> <button class="copy-btn ext-primary-button" data-type="hex">📋</button></div>
+        <div><strong>RGB:</strong> <span id="rgb"></span> <button class="copy-btn ext-primary-button" data-type="rgb">📋</button></div>
+        <div><strong>HSL:</strong> <span id="hsl"></span> <button class="copy-btn ext-primary-button" data-type="hsl">📋</button></div>
+        <div><strong>Name:</strong> <span id="colorName">Loading...</span></div> </div>
+      <button id="saveColor" class="ext-primary-button">⭐ Save</button>
+    </div>
+
+    <div id="savedColorsContainer"> <strong>Saved Colors:</strong>
+        <div id="savedColors">
+            <p class="placeholder" style="display: none; color: #ccc; font-style: italic; font-size: 0.9em;">No saved colors yet.</p>
+        </div>
+    </div>
+    <hr>
+     <div id="historyContainer">
+        <strong>History (Last 5):</strong>
+        <div id="colorHistory">
+            <p class="placeholder" style="display: none; color: #ccc; font-style: italic; font-size: 0.9em;">No history yet.</p>
+        </div>
+    </div>
+
+
+    <div id="toast" class="hidden"></div>
+  </div>
+
+  <script src="ntc.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

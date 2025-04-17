@@ -1,0 +1,166 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, #862f86, #5555c2);
+  color: #fff;
+  width: 350px;
+  padding: 15px;
+  box-sizing: border-box;
+}
+
+.container {
+  text-align: center;
+}
+
+h1 {
+  font-size: 22px;
+  padding-bottom: 15px;
+  border-bottom: 1px #fff dashed;
+}
+
+.ext-primary-button {
+  background: #ecf0f1;
+  color: #2c3e50;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 10px 5px;
+  transition: 0.2s ease;
+}
+
+.ext-primary-button:hover {
+  background: #dcdde1;
+}
+
+#colorDisplay {
+  width: 120px;
+  height: 120px;
+  margin: 10px auto;
+  border-radius: 12px;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+#colorCodes {
+  margin-top: 10px;
+  font-size: 15px;
+  text-align: left;
+  padding: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 10px;
+}
+
+.copy-btn {
+  margin-left: 8px;
+  padding: 3px 6px;
+  border-radius: 5px;
+  background-color: #95a5a6;
+  color: white;
+  font-size: 12px;
+}
+
+#savedColors {
+  margin-top: 15px;
+  text-align: left;
+  font-size: 13px;
+  max-height: 150px;
+  overflow-y: auto;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+#savedColors div {
+  padding: 8px;
+  background: #ecf0f1;
+  color: #2c3e50;
+  margin: 5px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+  font-weight: 500;
+}
+
+#savedColors div:hover {
+  background-color: #dcdde1;
+}
+
+#toast {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #2ecc71;
+  padding: 10px 20px;
+  color: white;
+  border-radius: 8px;
+  font-size: 14px;
+  opacity: 0.95;
+}
+
+.hidden {
+  display: none;
+}
+
+#savedColors button {
+  font-size: 14px;
+  background: transparent;
+  color: #c0392b;
+  border: none;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+#savedColors button:hover {
+  color: #e74c3c;
+}
+
+/* Add this to your existing popup.css */
+#historyContainer {
+  margin-top: 15px;
+  text-align: center;
+}
+
+#colorHistory {
+  margin-top: 5px; /* Small space below title */
+  font-size: 13px;
+  max-height: 100px; /* Adjust height as needed */
+  overflow-y: auto;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 10px;
+  border-radius: 10px;
+}
+
+#colorHistory div {
+  /* Style history items like saved items */
+  padding: 8px;
+  background: #ecf0f1;
+  color: #2c3e50;
+  margin: 5px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s;
+  font-weight: 500;
+}
+
+#colorHistory div:hover {
+  background-color: #dcdde1;
+}
+
+#colorHistory .placeholder,
+#savedColors .placeholder {
+    /* Style for placeholder text */
+    display: block; /* Show by default, JS will hide */
+    color: #ccc;
+    font-style: italic;
+    font-size: 0.9em;
+    text-align: center;
+    padding: 5px;
+}

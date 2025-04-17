@@ -1,0 +1,37 @@
+{
+  "manifest_version": 3,
+  "name": "Color Picker - Smart Pick", 
+  "version": "1.0.0", 
+  "description": "Pick any color from the screen, view it in multiple formats, save to favorites, view history and copy instantly.",
+  "permissions": [
+    "storage",       
+    "scripting",     
+    "activeTab",     
+    "clipboardWrite",
+    "contextMenus"   
+  ],
+  "host_permissions": [
+    "<all_urls>"     
+  ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "128": "icons/icon128.png" 
+    }
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "commands": {
+    "activate-picker": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+E",
+        "mac": "Command+Shift+E"
+      },
+      "description": "Activate Color Picker via Shortcut"
+    }
+  },
+  "icons": {
+     "128": "icons/icon128.png"
+   }
+}
