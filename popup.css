@@ -1,3 +1,62 @@
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 600px; /* Or desired fixed popup height */
+  width: 350px; /* Original width */
+  overflow: hidden; /* Prevent body scroll */
+  font-family: 'Segoe UI', sans-serif; /* Keep original */
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Fill body height */
+  background: linear-gradient(135deg, #862f86, #5555c2); /* Original background */
+  color: #fff; /* Original text color */
+  box-sizing: border-box;
+}
+
+.popup-header {
+  padding: 10px 15px 5px 15px; /* Adjust padding */
+  text-align: center; /* Center header content */
+  border-bottom: 1px #fff dashed; /* Original border */
+  flex-shrink: 0; /* Prevent header shrinking */
+}
+
+.popup-header h1 {
+  font-size: 22px;
+  margin: 0 0 10px 0; /* Adjust margin */
+  padding: 0;
+  border: none; /* Remove border from H1 itself */
+}
+
+.popup-header #pickColor {
+  margin-bottom: 10px; /* Space below button */
+}
+
+.scrollable-content {
+  flex-grow: 1; /* Allow content to take remaining space */
+  overflow-y: auto; /* Enable vertical scrolling ONLY for this div */
+  padding: 10px 15px 15px 15px; /* Padding for content area */
+}
+
+.scrollable-content .divider {
+  border: none;
+  border-top: 1px rgba(255, 255, 255, 0.3) dashed; /* Lighter dashed line */
+  margin: 15px 0;
+}
+
+/* Style for the section containers (add if needed) */
+#savedColorsContainer, #colorHistoryContainer {
+  margin-top: 0; /* Remove top margin if hr handles spacing */
+}
+#savedColorsContainer strong, #colorHistoryContainer strong {
+  display: block; /* Make title block */
+  margin-bottom: 5px; /* Space between title and list */
+  font-size: 1em; /* Adjust size if needed */
+  color: #eee; /* Slightly lighter title color */
+}
+
 body {
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
@@ -64,7 +123,6 @@ h1 {
   margin-top: 15px;
   text-align: left;
   font-size: 13px;
-  max-height: 150px;
   overflow-y: auto;
   background-color: rgba(255, 255, 255, 0.1);
   padding: 10px;
@@ -120,7 +178,7 @@ h1 {
 }
 
 /* Add this to your existing popup.css */
-#historyContainer {
+#colorHistoryContainer {
   margin-top: 15px;
   text-align: center;
 }
@@ -128,7 +186,6 @@ h1 {
 #colorHistory {
   margin-top: 5px; /* Small space below title */
   font-size: 13px;
-  max-height: 100px; /* Adjust height as needed */
   overflow-y: auto;
   background-color: rgba(255, 255, 255, 0.1);
   padding: 10px;
@@ -154,13 +211,13 @@ h1 {
   background-color: #dcdde1;
 }
 
+
 #colorHistory .placeholder,
 #savedColors .placeholder {
-    /* Style for placeholder text */
-    display: block; /* Show by default, JS will hide */
+    display: none; /* Hide placeholders by default, JS will show if needed */
     color: #ccc;
     font-style: italic;
     font-size: 0.9em;
     text-align: center;
-    padding: 5px;
+    padding: 10px;
 }

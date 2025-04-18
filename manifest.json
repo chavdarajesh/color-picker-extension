@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Color Picker - Smart Pick", 
-  "version": "1.0.0", 
+  "version": "1.0.1", 
   "description": "Pick any color from the screen, view it in multiple formats, save to favorites, view history and copy instantly.",
   "permissions": [
     "storage",       

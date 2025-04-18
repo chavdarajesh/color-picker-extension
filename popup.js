@@ -1,4 +1,5 @@
 // --- DOM Elements (Matching Original HTML) ---
+// ... (keep existing element selections) ...
 const pickColorBtn = document.getElementById("pickColor");
 const colorDisplay = document.getElementById("colorDisplay");
 const hexEl = document.getElementById("hex");
@@ -7,15 +8,15 @@ const hslEl = document.getElementById("hsl");
 const nameEl = document.getElementById("colorName");
 const colorInfo = document.getElementById("colorInfo");
 const saveColorBtn = document.getElementById("saveColor");
-const savedColorsList = document.getElementById("savedColors"); // Target the inner div
-const colorHistoryList = document.getElementById("colorHistory"); // Target the new history div
+const savedColorsList = document.getElementById("savedColors");
+const colorHistoryList = document.getElementById("colorHistory");
 const toast = document.getElementById("toast");
 
 const MAX_HISTORY = 5;
-const MAX_SAVED = 10; // Original limit
+const MAX_SAVED = 10;
 
-// --- Color Conversion & Naming (Keep from previous version or original) ---
-
+// --- Color Conversion & Naming ---
+// ... (keep hexToRgb, rgbToHsl, getClosestColorName functions) ...
 function hexToRgb(hex) {
     if (!hex || typeof hex !== 'string' || !hex.startsWith('#')) return 'rgb(0, 0, 0)';
     const bigint = parseInt(hex.substring(1), 16);
@@ -46,7 +47,6 @@ function rgbToHsl(rgb) {
     return `hsl(${Math.round(h * 360)}, ${Math.round(s * 100)}%, ${Math.round(l * 100)}%)`;
 }
 
-// Optional: Keep Color Naming
 function getClosestColorName(hex) {
     try {
         if (typeof ntc !== 'undefined') {
@@ -59,7 +59,9 @@ function getClosestColorName(hex) {
     }
 }
 
+
 // --- UI Update ---
+// ... (keep updateColorDisplay function) ...
 function updateColorDisplay(hexColor) {
     if (!hexColor) return;
     const rgbColor = hexToRgb(hexColor);
@@ -75,7 +77,8 @@ function updateColorDisplay(hexColor) {
     colorInfo.classList.remove("hidden");
 }
 
-// --- Toast Notification (Original) ---
+// --- Toast Notification ---
+// ... (keep showToast function) ...
 let toastTimeout;
 function showToast(msg, isError = false, duration = 2000) {
     clearTimeout(toastTimeout);
@@ -89,7 +92,9 @@ function showToast(msg, isError = false, duration = 2000) {
     }, duration);
 }
 
+
 // --- Picker Activation ---
+// ... (keep pickColorBtn listener, ensure it calls addToHistory) ...
 pickColorBtn.addEventListener("click", async () => {
     if (!window.EyeDropper) {
         showToast("EyeDropper not supported in this browser.", true);
@@ -116,8 +121,8 @@ pickColorBtn.addEventListener("click", async () => {
     }
 });
 
-
-// --- Clipboard Copying (Original Logic) ---
+// --- Clipboard Copying ---
+// ... (keep copy-btn listeners) ...
 document.querySelectorAll('.copy-btn').forEach(btn => {
     btn.addEventListener("click", () => {
         const type = btn.dataset.type;
@@ -130,10 +135,14 @@ document.querySelectorAll('.copy-btn').forEach(btn => {
     });
 });
 
-// --- History Management (NEW) ---
+// --- History Management (Added Debugging) ---
 async function loadHistory() {
     try {
+        // DEBUG: Log before getting history
+        console.log("loadHistory: Attempting to get 'colorHistory' from storage.");
         const { colorHistory = [] } = await chrome.storage.local.get("colorHistory");
+        // DEBUG: Log the retrieved history
+        console.log("loadHistory: Retrieved history:", JSON.stringify(colorHistory));
         renderColorList(colorHistoryList, colorHistory, false); // false = no delete button
     } catch (error) {
         console.error("Failed to load history:", error);
@@ -143,20 +152,27 @@ async function loadHistory() {
 async function addToHistory(hexColor) {
     if (!hexColor) return;
     try {
+        // DEBUG: Log color being added
+        console.log(`addToHistory: Attempting to add ${hexColor}`);
         const { colorHistory = [] } = await chrome.storage.local.get("colorHistory");
         const updatedHistory = [hexColor, ...colorHistory.filter(c => c !== hexColor)].slice(0, MAX_HISTORY);
+        // DEBUG: Log the history array *before* setting it
+        console.log(`addToHistory: Setting updated history:`, JSON.stringify(updatedHistory));
         await chrome.storage.local.set({ colorHistory: updatedHistory });
+        // DEBUG: Confirm set was called
+        console.log(`addToHistory: Storage set called for ${hexColor}`);
         await loadHistory(); // Refresh display immediately
     } catch (error) {
-        console.error("Failed to add to history:", error);
+        console.error(`Failed to add ${hexColor} to history:`, error);
     }
 }
 
-// --- Saved Colors Management (FIXED - Uses Original Key "colors") ---
+// --- Saved Colors Management ---
+// ... (keep loadSavedColors, saveColorBtn listener, removeSavedColor functions) ...
 async function loadSavedColors() {
     try {
-        // *** IMPORTANT: Use the original storage key "colors" ***
         const { colors = [] } = await chrome.storage.local.get("colors");
+         console.log("loadSavedColors: Retrieved saved:", JSON.stringify(colors)); // Debug log
         renderColorList(savedColorsList, colors, true); // true = show delete button
     } catch (error) {
         console.error("Failed to load saved colors:", error);
@@ -169,14 +185,10 @@ saveColorBtn.addEventListener("click", async () => {
         showToast("No color selected to save.", true);
         return;
     }
-
     try {
-        // *** IMPORTANT: Use the original storage key "colors" ***
         const { colors = [] } = await chrome.storage.local.get("colors");
-        const updated = [colorToSave, ...colors.filter(c => c !== colorToSave)].slice(0, MAX_SAVED); // Use MAX_SAVED
-        // *** IMPORTANT: Use the original storage key "colors" ***
+        const updated = [colorToSave, ...colors.filter(c => c !== colorToSave)].slice(0, MAX_SAVED);
         await chrome.storage.local.set({ colors: updated });
-
         await loadSavedColors(); // Refresh display
         showToast("Color saved!");
     } catch (error) {
@@ -187,12 +199,9 @@ saveColorBtn.addEventListener("click", async () => {
 
 async function removeSavedColor(hexColor) {
     try {
-        // *** IMPORTANT: Use the original storage key "colors" ***
         const { colors = [] } = await chrome.storage.local.get("colors");
         const updated = colors.filter(c => c !== hexColor);
-        // *** IMPORTANT: Use the original storage key "colors" ***
         await chrome.storage.local.set({ colors: updated });
-
         await loadSavedColors(); // Refresh display
         showToast("Color removed.");
     } catch (error) {
@@ -202,93 +211,133 @@ async function removeSavedColor(hexColor) {
 }
 
 
-// --- Generic List Rendering (Adapted from Original `loadSavedColors`) ---
+// --- Generic List Rendering (Added Debugging) ---
 function renderColorList(listElement, colorsArray, allowDelete) {
+    const listContainerId = listElement.id + 'Container';
+    const listContainerElement = document.getElementById(listContainerId);
+
+    // DEBUG: Log which list is being rendered and the data
+    console.log(`renderColorList: Rendering for ${listElement.id}. Data:`, JSON.stringify(colorsArray), `AllowDelete: ${allowDelete}`);
+
     listElement.innerHTML = ''; // Clear previous items
-    const placeholder = listElement.querySelector('.placeholder');
+    // Find placeholder INSIDE the listElement itself now
+    const placeholder = listElement.querySelector('.placeholder'); // Or create it if it doesn't exist
+
+     // Ensure placeholder exists (create if needed) - safer approach
+     let placeholderElement = listElement.querySelector('.placeholder');
+     if (!placeholderElement) {
+         placeholderElement = document.createElement('p');
+         placeholderElement.className = 'placeholder';
+         placeholderElement.textContent = listElement.id === 'savedColors' ? 'No saved colors yet.' : 'No history yet.';
+         placeholderElement.style.display = 'none'; // Start hidden
+         listElement.appendChild(placeholderElement); // Add to list div
+     }
+
 
     if (!colorsArray || colorsArray.length === 0) {
-        if (placeholder) placeholder.style.display = 'block'; // Show placeholder
+        if (placeholderElement) placeholderElement.style.display = 'block'; // Show placeholder
+        if (listContainerElement) listContainerElement.style.display = 'none'; // Hide whole section
+        // DEBUG: Log empty state
+        console.log(`renderColorList: List ${listElement.id} is empty. Hiding container ${listContainerId}.`);
         return;
     }
-    if (placeholder) placeholder.style.display = 'none'; // Hide placeholder
 
+    // --- If we have colors ---
+    if (listContainerElement) listContainerElement.style.display = 'block'; // Show whole section
+    if (placeholderElement) placeholderElement.style.display = 'none'; // Hide placeholder
+     // DEBUG: Log non-empty state
+     console.log(`renderColorList: List ${listElement.id} has items. Showing container ${listContainerId}.`);
 
-    colorsArray.forEach(color => {
+    // ... (rest of the forEach loop to create list items remains the same) ...
+     colorsArray.forEach(color => {
         const el = document.createElement("div");
-
-        // Use original styling structure if needed, or simplify
-        el.style.backgroundColor = color; // Setting background as per original CSS potentially
+        el.style.backgroundColor = color;
 
         const span = document.createElement("span");
         span.textContent = color;
-        span.style.flex = "1"; // Original styles
+        span.style.flex = "1";
         span.style.cursor = "pointer";
-        span.onclick = () => { // Copy on click
+        span.onclick = () => {
             navigator.clipboard.writeText(color)
-                .then(() => showToast("Copied saved color!"))
+                .then(() => showToast("Copied color!")) // Simplified message
                 .catch(err => showToast("Failed to copy.", true));
         };
-
         el.appendChild(span);
 
         if (allowDelete) {
             const removeBtn = document.createElement("button");
-            removeBtn.textContent = "❌"; // Original button text
-            // Apply original styles for consistency
+            removeBtn.textContent = "❌";
+            // Apply original styles
             removeBtn.style.marginLeft = "10px";
             removeBtn.style.border = "none";
             removeBtn.style.background = "transparent";
             removeBtn.style.cursor = "pointer";
             removeBtn.style.color = "#c0392b";
             removeBtn.onclick = async (e) => {
-                e.stopPropagation(); // Prevent item click
-                await removeSavedColor(color); // Make sure this function is defined and async
+                e.stopPropagation();
+                await removeSavedColor(color);
             };
-             // Add hover style via JS or rely on original CSS if it had it
             removeBtn.onmouseover = () => { removeBtn.style.color = "#e74c3c"; };
             removeBtn.onmouseout = () => { removeBtn.style.color = "#c0392b"; };
-
             el.appendChild(removeBtn);
         }
-
         listElement.appendChild(el);
     });
 }
 
 
-// --- Initialization ---
+// --- Initialization (MODIFIED) ---
 document.addEventListener("DOMContentLoaded", async () => {
-    // Load initial state
-    await loadSavedColors();
-    await loadHistory();
+    console.log("Popup DOMContentLoaded."); // DEBUG: Log popup load
 
-    // Check for color picked via context menu/shortcut
+    // Load saved colors first
+    await loadSavedColors();
+
+    // Load history AND display the latest color picked
     try {
-        const { lastPickedColor } = await chrome.storage.local.get("lastPickedColor");
-        if (lastPickedColor) {
-            console.log("Popup found lastPickedColor:", lastPickedColor);
-            updateColorDisplay(lastPickedColor);
-            // Don't add to history here, background script should handle it
-            await chrome.storage.local.remove("lastPickedColor"); // Clear after use
+        console.log("DOMContentLoaded: Getting 'colorHistory' for initial display."); // DEBUG
+        const { colorHistory = [] } = await chrome.storage.local.get("colorHistory");
+        console.log("DOMContentLoaded: Initial history retrieved:", JSON.stringify(colorHistory)); // DEBUG
+
+        // Render the history list
+        await loadHistory(); // Call loadHistory to render the list correctly
+
+        // Update display with the *most recent* color from history, if available
+        if (colorHistory.length > 0) {
+            const lastPicked = colorHistory[0];
+            console.log("DOMContentLoaded: Displaying last picked color from history:", lastPicked); // DEBUG
+            updateColorDisplay(lastPicked);
         } else {
-            console.log("No lastPickedColor found on popup open.");
+             console.log("DOMContentLoaded: No history found, not setting initial color display."); // DEBUG
+             // Optional: Hide colorInfo if nothing else set it
+             // if (!colorInfo.classList.contains('hidden')) {
+             //    // Check if display is already visible from a previous failed load?
+             // }
         }
     } catch (error) {
-        console.error("Error getting lastPickedColor:", error);
+        console.error("Error during initial history load and display:", error);
     }
+
+    // --- Removed lastPickedColor logic, relying on history now ---
 });
 
-// --- Listen for messages from background ---
+// --- Listen for messages from background (Added Debugging) ---
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    // DEBUG: Log received messages
+    console.log("Popup onMessage listener received:", JSON.stringify(request));
+
     if (request.action === "colorPicked" && request.color) {
-        console.log("Popup received color:", request.color);
         updateColorDisplay(request.color);
-        // History should be added by background script or the picker function itself
-        // Optionally refresh history display here if needed:
-        loadHistory();
+        // History is updated by background OR the button click now.
+        // We just need to refresh the display if message comes from background.
+        loadHistory(); // Refresh history display
         showToast(`Color ${request.color} picked via external trigger!`);
         sendResponse({ status: "Popup updated" });
+    } else {
+         // Send a default response if no action matched, or handle other messages
+         sendResponse({ status: "Message received, no action taken" });
     }
-    return true; // Indicate async response possible
+    // Return true only if you intend to use sendResponse asynchronously later
+    // Since sendResponse is called synchronously here, returning true is okay but not strictly necessary
+    return true;
 });
